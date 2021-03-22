@@ -1,12 +1,18 @@
 package app.com.cadastro.service.impl;
 
 import app.com.cadastro.exception.ResourceNotFoundException;
+import app.com.cadastro.model.Nacionalidade;
+import app.com.cadastro.model.Naturalidade;
 import app.com.cadastro.model.Pessoa;
 import app.com.cadastro.repository.CadastroPessoaRepository;
+import app.com.cadastro.repository.NacionalidadeRepository;
+import app.com.cadastro.repository.NaturalidadeRepository;
 import app.com.cadastro.service.CadastroPessoaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,9 +32,28 @@ public class CadastroPessoaImpl implements CadastroPessoaService {
     @Autowired
     private CadastroPessoaRepository cadastroPessoaRepository;
 
+    @Autowired
+    private NacionalidadeRepository nacionalidadeRepository;
+
+    @Autowired
+    private NaturalidadeRepository naturalidadeRepository;
+
     @Override
-    public List<Pessoa> listarTodasPessoas() {
-        return this.cadastroPessoaRepository.findAll();
+    public Page<Pessoa> listarTodasPessoas(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(
+                page,
+                size);
+        return cadastroPessoaRepository.findAllBy(pageRequest);
+    }
+
+    @Override
+    public List<Nacionalidade> listarTodosPais() {
+        return this.nacionalidadeRepository.findAll();
+    }
+
+    @Override
+    public List<Naturalidade> listarTodosEstados() {
+        return this.naturalidadeRepository.findAll();
     }
 
     @Override
